@@ -1,0 +1,100 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  max-width: var(--ct-width);
+  padding: 0 1.5rem;
+  margin: 0 auto;
+  font-family: var(--ft);
+  font-size: var(--ft-size);
+  line-height: 1.5;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    form                                    */
+/* -------------------------------------------------------------------------- */
+form {
+  width: 350px;
+}
+
+form input {
+  all: unset;
+  border: var(--bd-width) var(--bd-style) var(--bd-muted);
+  border-radius: var(--bd-radius);
+  box-sizing: border-box;
+  color: black;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+}
+input {
+  all: unset;
+  border: var(--bd-width) var(--bd-style) var(--bd-muted);
+  border-radius: var(--bd-radius);
+  box-sizing: border-box;
+  color: black;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+}
+form button {
+  width: 100%;
+  border-color: black;
+  background: var(--accent);
+  color: var(--bg-color);
+}
+form button:hover {
+  background: var(--light);
+}
+
+button {
+  border: var(--bd-width) var(--bd-style) var(--bd-muted);
+  border-radius: var(--bd-radius);
+  background-color: var(--bg-color);
+  color: var(--accent);
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-size: var(--ft-size);
+  cursor: pointer;
+}
+button:hover {
+  border-color: black;
+  background: var(--accent);
+  color: var(--bg-color);
+}
+
+hr {
+  border: 1px solid black;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: black;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+:root,
+[data-color-scheme="light"] {
+  --accent: #2ca9bc;
+  --light: #30b9cf;
+
+  --ct-width: 1024px;
+
+  --bg-color: white;
+
+  --bd-style: solid;
+  --bd-muted: black;
+  --bd-radius: 8px;
+  --bd-width: 2px;
+
+  --ft: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --ft-size: 18px;
+}
