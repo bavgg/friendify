@@ -1,10 +1,6 @@
 import bcrypt from "bcrypt";
-
 import { client } from "../database.config.mjs";
 import { timeNow } from "./utils.mjs";
-
-
-
 
 async function verifyPassword(password, hash) {
   const is = await bcrypt.compare(password, hash);
@@ -16,7 +12,7 @@ async function hashPassword(password) {
   return hash;
 }
 
-export async function insertUser(user) {
+export async function insert_user(user) {
   try {
     // console.log({ first: user.firstname, last: user.lastname, email: user.email });
     
@@ -36,3 +32,22 @@ export async function insertUser(user) {
     return { error: err.message }; 
   } 
 } 
+
+
+export async function verify_user(email, password) {
+  try {
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await client.query(query, [email]);
+
+    const user = result.rows[0];
+
+    if (user) {
+      const isPasswordValid = await verifyPassword(password, user.password_hash);
+      if (isPasswordValid) {
+        return { user };
+      } 
+    }
+  } catch (error) {
+    console.error('Error during authentication:', error);
+  }
+}

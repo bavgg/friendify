@@ -4,11 +4,8 @@ console.log(__dirname);
 module.exports = {
   mode: 'development',
   entry: {
-    // main: './public/main.mjs',
-    // header: './public/header.mjs',
     index: './client/index.mjs',
-    // cart: './public/cart.mjs',
-    // checkout: './public/checkout.mjs',
+    login: './client/login/login.mjs'
   },
   output: {
     filename: '[name].js',
