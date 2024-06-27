@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 async function generateJWToken(user, secret_key) {
-  const token = jwt.sign({ email: user.email }, secret_key, {
+  const token = jwt.sign( user, secret_key, {
     expiresIn: '1h',
   });
   return token;

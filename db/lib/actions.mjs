@@ -44,7 +44,7 @@ export async function verify_user(email, password) {
     if (user) {
       const isPasswordValid = await verifyPassword(password, user.password_hash);
       if (isPasswordValid) {
-        return { user };
+        return user;
       } 
     }
   } catch (error) {
