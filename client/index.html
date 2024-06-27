@@ -5,93 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>FacebookClone</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
     <link
       rel="icon"
       href="https://www.svgrepo.com/show/461325/facebook-circle.svg"
       type="image/svg+xml"
     />
     <style>
-      #ct1 {
-        display: flex;
-        gap: 50px;
-        align-items: center;
-        margin-top: 300px;
-      }
-      #ct2 {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 50px;
-      }
-      #ct2 h1 {
-        font-size: 3.5rem;
-        color: var(--accent);
-      }
-      #c2 p {
-        font-size: 2rem;
-      }
-      #ct3 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      @media screen and (max-width: 900px) {
-        #ct1 {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-top: 100px;
-          gap: 5px;
+        body {
+            max-width: 1600px;
         }
-        #ct2 {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-bottom: 50px;
-          text-align: center;
+        #c2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
         }
-        #ct2 h1 {
-          color: var(--accent);
+        #c1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid black;
         }
-        #ct2 p {
-          font-size: 1.5rem;
+        #c111 {
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
+            position: relative;
         }
-        #ct2, #ct3 {
-            width: 400px;
+        #c12 {
+            position: relative;
+            right: 0px;
         }
-      }
+        #c11 {
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
+            position: relative;
+        }
+        #search {
+            /* position: absolute; */
+            margin-left: 4px;
+            margin-top: 2px;
+        }
+        #searchbar {
+            position: absolute;
+            width: 300px;
+        }
     </style>
   </head>
   <body>
-    <div id="ct1">
-      <div id="ct2">
-        <h1>facebook</h1>
-        <p>Connect with friends and the world around you on Facebook.</p>
-      </div>
-
-      <div id="ct3">
-        <form>
-          <input
-            autocomplete="off"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Email"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            required
-          />
-          <button type="submit" id="signin">Log In</button>
-          <hr />
-        </form>
-        <button>Create new account</button>
-      </div>
+    <nav id="c1">
+        <div id="c11">
+            <!-- facebook icon -->
+            <script src="./icons/fbicon.js"></script>
+            <div id="c111">
+                <!-- search icon -->
+                <script src="./icons/searchicon.js"></script>
+                <input id="searchbar" type="text">
+            </div>
+        </div>
+        <div id="c12">
+            <script src="./icons/usericon.js"></script>
+        </div>
+        
+    </nav>
+    <!-- grid -->
+    <div id="c2">
+        <div id="c21">
+            <div id="c211">
+                <script src="./icons//usericon.js"></script>
+                <p>Jonas Gestopa</p>
+            </div>
+        </div>
+        <div id="c22">
+            <div id="c221">
+                <script src="./icons//usericon.js"></script>
+                <form style="width: 100%;">
+                    <input type="text" placeholder="What's in your mind Jonas">
+                    <button style="width: fit-content;">Post</button>
+                </form>
+            </div>
+            <div id="c222">
+                <div id="c222a">
+                    <script src="./icons//usericon.js"></script>
+                    <p>Jonas Gestopa</p>
+                </div>
+                <div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                </div>
+                <hr>
+                <div id="c222c">
+                    <style>
+                        #c222c1 {
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                        }
+                    </style>
+                    <span id="c222c1">
+                        <script src="./icons/likeicon.js"></script>Like
+                    </span>
+                    <span id="c222c1">
+                        <script src="./icons/comment.js"></script>Comment
+                    </span>
+                </div>
+                <hr>
+                <div id="c222b">
+                    <script src="./icons/usericon.js"></script>
+                    <form style="width: 100%; display: flex; align-items: center;">
+                        <input style="background-color: #d6f1f5;" type="text" placeholder="Write a comment...">
+                        <script src="./icons/sendicon.js"></script>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="./dist/index.js"></script>
   </body>
 </html>
+<style>
+    #c2 {
+        margin-top: 20px;
+    }
+    #c21 {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+    }
+    #c211 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    #c221 {
+        display: flex;
+        gap: 10px;
+        border: 2px solid black;
+        border-radius: var(--bd-radius);
+        align-items: center;
+        padding: 12px;
+    }
+    #c22 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    #c222 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: 2px solid black;
+        border-radius: var(--bd-radius);
+        /* align-items: center; */
+        padding: 12px;
+    }
+    #c222a {
+        display: flex;
+    }
+    #c222b {
+        display: flex;
+        gap: 10px;
+        border-radius: var(--bd-radius);
+        align-items: center;
+        /* padding: 12px; */
+    }
+    #c222c {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+</style>
