@@ -88,6 +88,14 @@ body {
   align-items: center;
   gap: 6px;
 }
+#fullname2 {
+  display: block;
+}
+@media screen and (max-width: 900px) {
+  #fullname2 {
+    display: none;
+  }
+}
 #c221 {
   display: flex;
   gap: 10px;
@@ -124,4 +132,9 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+#c222d {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

@@ -3,26 +3,40 @@ import { client } from "./database.config.mjs";
 const createUsersTableQuery = `
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
+    firstname VARCHAR(255) UNIQUE NOT NULL,
+    lastname VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP,
-    profile_picture VARCHAR(255)
   );
 `;
 
-const createCartItemsTableQuery = `
-  CREATE TABLE IF NOT EXISTS cart_items (
+const createPostsTableQuery = `
+  CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    total_price DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * price) STORED,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+  );
+`;
+const deletePostsTableQuery = `
+  DROP TABLE posts;
+`;
+
+const createLikesTableQuery = `
+  CREATE TABLE likes (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    post_id INT REFERENCES posts(id) ON DELETE CASCADE,
+    UNIQUE(user_id, post_id) -- Ensures a user can like a post only once
+  );
+`;
+
+const createCommentsTableQuery = `
+  CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
   );
 `;
 
@@ -40,40 +54,20 @@ const executeQuery = (query, description, callback) => {
   });
 };
 
-// Function to create the users table
-const createUsersTable = (callback) => {
-  executeQuery(createUsersTableQuery, 'Create Users Table', callback);
-};
+// // Function to create the users table
+// const createUsersTable = (callback) => {
+//   executeQuery(deletePostsTableQuery, 'Create Users Table', callback);
+// };
 
-// Function to create the cart items table
-const createCartItemsTable = (callback) => {
-  executeQuery(createCartItemsTableQuery, 'Create Cart Items Table', callback);
-};
+// // Function to create the cart items table
+// const createCartItemsTable = (callback) => {
+//   executeQuery(createCartItemsTableQuery, 'Create Cart Items Table', callback);
+// };
 
-// Initialize the connection and start creating the users table
-// createUsersTable(() => {
-//   createCartItemsTable(() => {
-//     // End the client connection after all queries are done
-//     client.end();
-//   });
-// });
+executeQuery(deletePostsTableQuery, 'Delete Posts Table');
 
-const testQuery = `
-  SELECT * FROM users
-`;
 
-// const testQuery = `
-// SELECT column_name, data_type
-//   FROM information_schema.columns
-//   WHERE table_name = 'users' AND table_schema = 'public';
-// `;
 
-// executeQuery(testQuery, 'Test query');
 
-// Execute the query
-async function main() {
-    const result = await client.query(testQuery);
-    console.log(result.rows[0]);
-}
 
-main();
+

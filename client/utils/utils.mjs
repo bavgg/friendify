@@ -4,15 +4,11 @@ export function isAuthenticated() {
     const token = localStorage.getItem('authToken');
     
     if (!token) {
-      console.log('erhe');
-      
       return false;
     }
     
     try {
-      
       const decodedToken = jwtDecode(token);
-      
       const currentTime = Date.now() / 1000; // current time in seconds
   
       return decodedToken.exp >= currentTime;
@@ -21,7 +17,6 @@ export function isAuthenticated() {
       return false;
     }
   }
-
 
 export function getDecodedAuthToken() {
   const token = localStorage.getItem('authToken');
