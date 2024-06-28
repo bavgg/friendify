@@ -5,7 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "/login";
   }
   const token = getDecodedAuthToken();
-  if(token !== undefined) console.log(token);
-  
-  (document.getElementById('fullname')).textContent = token.firstname + ' ' + token.lastname;
+  if(token !== undefined) {
+    (document.getElementById('fullname')).textContent = token.firstname + ' ' + token.lastname;
+  }
+
+  const logoutButton = document.getElementById('c121b');
+
+  logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('authToken');
+    window.location.href = "/";
+  });
 });

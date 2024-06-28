@@ -29,12 +29,13 @@ body {
   flex-direction: column;
   width: 350px;
   height: auto;
-  border: 1px solid black;
+  border: 2px solid black;
   position: absolute;
   padding: 20px;
   gap: 20px;
   top: 50px;
   right: 0;
+  background-color: white;
 }
 #c121a {
   border: 1px solid black;
@@ -53,6 +54,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
 }
 
 #c11 {
