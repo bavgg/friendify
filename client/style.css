@@ -37,6 +37,9 @@ body {
   right: 0;
   background-color: white;
 }
+#c122 {
+  cursor: pointer;
+}
 #c121a {
   border: 1px solid black;
   width: auto;
