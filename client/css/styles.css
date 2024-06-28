@@ -65,11 +65,13 @@ button:hover {
   color: var(--bg-color);
 }
 
+p {
+  color: gray;
+}
+
 hr {
   border: 1px solid black;
   width: 100%;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   color: black;
 }
 

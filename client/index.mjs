@@ -1,5 +1,5 @@
 import { isAuthenticated, getDecodedAuthToken } from "./utils/utils.mjs";
-import { usericon, likeicon, comment, sendicon  } from "./icons/icons.js";
+import { usericon, likeicon, comment, sendicon } from "./icons/icons.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!isAuthenticated()) {
@@ -16,28 +16,19 @@ document.addEventListener("DOMContentLoaded", () => {
       "content"
     ).placeholder = `What's in your mind ${token.firstname}`;
 
-    document
-      .getElementById("form")
-      .addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        const user_id = token.id;
-        const content = document.getElementById("content").value;
-      });
-
     const postsContainer = document.getElementById("c222d");
-    const posts = `
+    let posts = '';
+
+    function createPost(fullname, content) {
+      const postTemplate = `
     <div id="c222">
             <div id="c222a">
               ${usericon}
-              <p>Jonas Gestopa</p>
+              <p>${fullname}</p>
             </div>
             <div>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                ${content}
               </p>
             </div>
             <hr />
@@ -71,8 +62,47 @@ document.addEventListener("DOMContentLoaded", () => {
               </form>
             </div>
           </div>
-    `;
-    postsContainer.innerHTML = posts;
+      `;
+
+      return postTemplate;
+    }
+
+    
+    document
+      .getElementById("form")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const user_id = token.id;
+        const content = document.getElementById("content").value;
+
+        try {
+          const response = await fetch("/add-post", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id, content }),
+          });
+
+          if (!response.ok) {
+            const responseDdata = await response.json();
+            alert(responseDdata.message);
+
+            throw new Error("Network response was not ok");
+          }
+
+          const responseData = await response.json();
+          if (responseData.success) {
+            posts = createPost((token.firstname + ' ' + token.lastname), content) + posts;
+            
+            postsContainer.innerHTML = posts;
+          }
+          // window.location.href = "http://localhost:3000/";
+        } catch (error) {
+          console.error("Error submitting form:", error);
+        }
+      });
   }
 
   document.getElementById("c121b").addEventListener("click", () => {

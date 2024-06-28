@@ -67,3 +67,4 @@ export async function insert_post(user_id, content) {
     return { error: err.message }; 
   } 
 } 
+// insert_post(17, 'test');

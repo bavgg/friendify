@@ -1,7 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { insert_user, verify_user } from '../db/lib/actions.mjs';
+import { insert_user, verify_user, insert_post } from '../db/lib/actions.mjs';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
@@ -60,7 +60,15 @@ app.post('/user/register', async (req, res) => {
 });
 
 app.post('/add-post', async (req, res) => {
+  const user_id = req.body.user_id;
+  const content = req.body.content;
 
+  const result = await insert_post(user_id, content);
+  if (result.id !== undefined) {
+    return res.status(201).json({ success: true });
+  } else {
+    return res.status(401).json({ success: false });
+  }
 });
 
 
