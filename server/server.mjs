@@ -2,6 +2,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { insert_user, verify_user, insert_post } from '../db/lib/actions.mjs';
+import { fetch_posts } from '../db/lib/data.mjs';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
@@ -68,6 +69,20 @@ app.post('/add-post', async (req, res) => {
     return res.status(201).json({ success: true });
   } else {
     return res.status(401).json({ success: false });
+  }
+});
+
+app.get('/posts', async (req, res) => {
+  // const { friend } = req.query; 
+
+  const result = await fetch_posts();
+  // console.log(result);
+  
+
+  if(result !== undefined && result.length !== 0){
+    return res.status(201).json(result);
+  }else {
+    return res.status(401);
   }
 });
 

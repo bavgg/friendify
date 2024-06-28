@@ -1,6 +1,9 @@
 import { isAuthenticated, getDecodedAuthToken } from "./utils/utils.mjs";
-import { usericon, likeicon, comment, sendicon } from "./icons/icons.js";
 
+import { fetchPosts, createPost } from "./utils/utils.mjs";
+
+const postsContainer = document.getElementById("c222d");
+let posts = "";
 document.addEventListener("DOMContentLoaded", () => {
   if (!isAuthenticated()) {
     window.location.href = "/login";
@@ -8,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const token = getDecodedAuthToken();
   if (token !== undefined) {
+    console.log("🚀 ~ document.addEventListener ~ token:", token);
     document.getElementById("fullname1").textContent =
       token.firstname + " " + token.lastname;
     document.getElementById("fullname2").textContent =
@@ -16,58 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "content"
     ).placeholder = `What's in your mind ${token.firstname}`;
 
-    const postsContainer = document.getElementById("c222d");
-    let posts = '';
-
-    function createPost(fullname, content) {
-      const postTemplate = `
-    <div id="c222">
-            <div id="c222a">
-              ${usericon}
-              <p>${fullname}</p>
-            </div>
-            <div>
-              <p>
-                ${content}
-              </p>
-            </div>
-            <hr />
-            <div id="c222c">
-              <style>
-                #c222c1 {
-                  display: flex;
-                  align-items: center;
-                  gap: 6px;
-                }
-              </style>
-              <span id="c222c1">
-                ${likeicon}
-                Like
-              </span>
-              <span id="c222c1">
-                ${comment}
-                Comment
-              </span>
-            </div>
-            <hr />
-            <div id="c222b">
-              ${usericon}
-              <form style="width: 100%; display: flex; align-items: center">
-                <input
-                  style="background-color: #d6f1f5"
-                  type="text"
-                  placeholder="Write a comment..."
-                />
-                ${sendicon}
-              </form>
-            </div>
-          </div>
-      `;
-
-      return postTemplate;
-    }
-
     
+
     document
       .getElementById("form")
       .addEventListener("submit", async function (event) {
@@ -94,8 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const responseData = await response.json();
           if (responseData.success) {
-            posts = createPost((token.firstname + ' ' + token.lastname), content) + posts;
-            
+            posts =
+              createPost(token.firstname + " " + token.lastname, content) +
+              posts;
+
             postsContainer.innerHTML = posts;
           }
           // window.location.href = "http://localhost:3000/";
@@ -131,4 +87,16 @@ document.addEventListener("DOMContentLoaded", () => {
       documentLogoutContainer.style.display = "none";
     }
   });
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const postsData = await fetchPosts();
+  console.log("🚀 ~ document.addEventListener ~ postsData:", postsData);
+
+  if (postsData !== undefined) {
+    postsData.map((post) => {
+      posts = createPost(post.fullname, post.content) + posts;
+    });
+    postsContainer.innerHTML = posts;
+  }
 });
