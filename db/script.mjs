@@ -15,9 +15,11 @@ const createPostsTableQuery = `
   CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
+    content TEXT NOT NULL
   );
 `;
+
+
 const deletePostsTableQuery = `
   DROP TABLE posts;
 `;
@@ -53,6 +55,7 @@ const executeQuery = (query, description, callback) => {
     }
   });
 };
+executeQuery(createPostsTableQuery, 'Create Posts Table');
 
 // // Function to create the users table
 // const createUsersTable = (callback) => {
@@ -64,7 +67,7 @@ const executeQuery = (query, description, callback) => {
 //   executeQuery(createCartItemsTableQuery, 'Create Cart Items Table', callback);
 // };
 
-executeQuery(deletePostsTableQuery, 'Delete Posts Table');
+
 
 
 
