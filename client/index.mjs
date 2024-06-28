@@ -1,4 +1,5 @@
 import { isAuthenticated, getDecodedAuthToken } from "./utils/utils.mjs";
+import { usericon, likeicon, comment, sendicon  } from "./icons/icons.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!isAuthenticated()) {
@@ -12,14 +13,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("fullname2").textContent =
       token.firstname + " " + token.lastname;
     document.getElementById(
-      "post_input"
+      "content"
     ).placeholder = `What's in your mind ${token.firstname}`;
+
+    document
+      .getElementById("form")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const user_id = token.id;
+        const content = document.getElementById("content").value;
+      });
 
     const postsContainer = document.getElementById("c222d");
     const posts = `
     <div id="c222">
             <div id="c222a">
-              <script src="./icons//usericon.js"></script>
+              ${usericon}
               <p>Jonas Gestopa</p>
             </div>
             <div>
@@ -40,24 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
               </style>
               <span id="c222c1">
-                <script src="./icons/likeicon.js"></script>
+                ${likeicon}
                 Like
               </span>
               <span id="c222c1">
-                <script src="./icons/comment.js"></script>
+                ${comment}
                 Comment
               </span>
             </div>
             <hr />
             <div id="c222b">
-              <script src="./icons/usericon.js"></script>
+              ${usericon}
               <form style="width: 100%; display: flex; align-items: center">
                 <input
                   style="background-color: #d6f1f5"
                   type="text"
                   placeholder="Write a comment..."
                 />
-                <script src="./icons/sendicon.js"></script>
+                ${sendicon}
               </form>
             </div>
           </div>
@@ -65,32 +75,30 @@ document.addEventListener("DOMContentLoaded", () => {
     postsContainer.innerHTML = posts;
   }
 
-  const logoutButton = document.getElementById("c121b");
-
-  logoutButton.addEventListener("click", () => {
+  document.getElementById("c121b").addEventListener("click", () => {
     localStorage.removeItem("authToken");
     window.location.href = "/";
   });
 
-  const profileButton = document.getElementById("c122");
-  const logoutContainer = document.getElementById("c121");
+  const documentProfileButton = document.getElementById("c122");
+  const documentLogoutContainer = document.getElementById("c121");
 
-  profileButton.addEventListener("click", (event) => {
+  documentProfileButton.addEventListener("click", (event) => {
     event.stopPropagation();
-    if (logoutContainer.style.display === "flex") {
-      logoutContainer.style.display = "none";
+    if (documentLogoutContainer.style.display === "flex") {
+      documentLogoutContainer.style.display = "none";
     } else {
-      logoutContainer.style.display = "flex";
+      documentLogoutContainer.style.display = "flex";
     }
   });
 
-  // Hide logoutContainer when clicking outside
+  // Hide documentLogoutContainer when clicking outside
   document.addEventListener("click", (event) => {
     if (
-      !logoutContainer.contains(event.target) &&
-      event.target !== profileButton
+      !documentLogoutContainer.contains(event.target) &&
+      event.target !== documentProfileButton
     ) {
-      logoutContainer.style.display = "none";
+      documentLogoutContainer.style.display = "none";
     }
   });
 });

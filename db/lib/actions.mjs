@@ -51,3 +51,19 @@ export async function verify_user(email, password) {
     console.error('Error during authentication:', error);
   }
 }
+
+export async function insert_post(user_id, content) {
+  try {
+    const query =
+      "INSERT INTO posts (user_id, content) VALUES ($1, $2) RETURNING *";
+    const values = [user_id, content];
+
+    const result = await client.query(query, values);
+    console.log(result.rows[0]);
+    
+    return result.rows[0]; // Return the inserted user
+  } catch (err) {
+    console.error("Error inserting user:", err);
+    return { error: err.message }; 
+  } 
+} 

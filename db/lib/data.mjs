@@ -7,6 +7,5 @@ export async function fetchPostsByUserId(id) {
 
     const result = await client.query(query, values);
     console.log(result.rows);
-    
 }
-fetchPostsByUserId(17);
+
