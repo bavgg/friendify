@@ -19,11 +19,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const profileButton = document.getElementById("c122");
   const logoutContainer = document.getElementById("c121");
-  profileButton.addEventListener("click", () => {
-    if (logoutContainer.style.display === "none") {
-      logoutContainer.style.display = "flex";
-    } else {
+
+  profileButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (logoutContainer.style.display === "flex") {
       logoutContainer.style.display = "none";
-    } 
+    } else {
+      logoutContainer.style.display = "flex";
+    }
+  });
+
+  // Hide logoutContainer when clicking outside
+  document.addEventListener("click", (event) => {
+    if (
+      !logoutContainer.contains(event.target) &&
+      event.target !== profileButton
+    ) {
+      logoutContainer.style.display = "none";
+    }
   });
 });
