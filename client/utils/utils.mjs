@@ -43,24 +43,24 @@ export async function fetchPosts() {
   }
 }
 
-export function createPost(fullname, content, isLiked = null) {
+export function createPost(post, isLiked = null) {
   let postTemplate = "";
   if (isLiked) {
     postTemplate = `
 <div id="c222">
         <div id="c222a">
           ${usericon}
-          <p>${fullname}</p>
+          <p>${post.fullname}</p>
         </div>
         <div>
           <p>
-            ${content}
+            ${post.content}
           </p>
         </div>
         <hr />
         <div id="c222c">
           <style>
-            #liked {
+            #like-button-${post.post_id} {
               display: flex;
               align-items: center;
               gap: 6px;
@@ -69,16 +69,16 @@ export function createPost(fullname, content, isLiked = null) {
               cursor: pointer;
               background: var(--accent);
             }
-            #liked:hover {
+            #like-button-${post.post_id}:hover {
               background: var(--tint);
               // color: white;
             }
           </style>
-          <span id="liked">
+          <span id="like-button-${post.post_id}">
             ${likeicon}
             Like
           </span>
-          <span id="c222c1">
+          <span id="comment-button-${post.post_id}">
             ${comment}
             Comment
           </span>
@@ -102,17 +102,17 @@ export function createPost(fullname, content, isLiked = null) {
 <div id="c222">
         <div id="c222a">
           ${usericon}
-          <p>${fullname}</p>
+          <p>${post.fullname}</p>
         </div>
         <div>
           <p>
-            ${content}
+            ${post.content}
           </p>
         </div>
         <hr />
         <div id="c222c">
           <style>
-            #c222c1 {
+            #like-button-${post.post_id} {
               display: flex;
               align-items: center;
               gap: 6px;
@@ -120,16 +120,16 @@ export function createPost(fullname, content, isLiked = null) {
               border-radius: var(--bd-radius);
               cursor: pointer;
             }
-            #c222c1:hover {
+            #like-button-${post.post_id}:hover {
               background: var(--tint);
               // color: white;
             }
           </style>
-          <span id="c222c1">
+          <span id="like-button-${post.post_id}">
             ${likeicon}
             Like
           </span>
-          <span id="c222c1">
+          <span id="comment-button-${post.post_id}">
             ${comment}
             Comment
           </span>
