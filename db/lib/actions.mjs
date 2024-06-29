@@ -63,8 +63,26 @@ export async function insert_post(user_id, content) {
     
     return result.rows[0]; // Return the inserted user
   } catch (err) {
-    console.error("Error inserting user:", err);
+    console.error("Error inserting post:", err);
     return { error: err.message }; 
   } 
 } 
 // insert_post(17, 'test');
+
+export async function insert_like(user_id, post_id) {
+  try {
+    const query =
+      "INSERT INTO likes (user_id, post_id) VALUES ($1, $2) RETURNING *";
+    const values = [user_id, post_id];
+
+    const result = await client.query(query, values);
+    console.log(result.rows[0]);
+    
+    return result.rows[0]; // Return the inserted user
+  } catch (err) {
+    console.error("Error inserting likes:", err);
+    return { error: err.message }; 
+  } 
+} 
+
+// insert_like(17, 2);

@@ -2,30 +2,30 @@ import { jwtDecode } from "jwt-decode";
 import { usericon, likeicon, comment, sendicon } from "../icons/icons.js";
 
 export function isAuthenticated() {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      return false;
-    }
-    
-    try {
-      const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // current time in seconds
-  
-      return decodedToken.exp >= currentTime;
-    } catch (error) {
-      console.error('Invalid token:', error);
-      return false;
-    }
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    return false;
   }
 
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000; // current time in seconds
+
+    return decodedToken.exp >= currentTime;
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return false;
+  }
+}
+
 export function getDecodedAuthToken() {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
   try {
     const decodedToken = jwtDecode(token);
     return decodedToken;
   } catch (error) {
-    console.error('Invalid token:', error);
+    console.error("Invalid token:", error);
   }
 }
 
@@ -39,13 +39,66 @@ export async function fetchPosts() {
 
     return posts;
   } catch (error) {
-    console.error('Error fetching data:', error);
-
+    console.error("Error fetching data:", error);
   }
 }
 
-export function createPost(fullname, content) {
-  const postTemplate = `
+export function createPost(fullname, content, isLiked = null) {
+  let postTemplate = "";
+  if (isLiked) {
+    postTemplate = `
+<div id="c222">
+        <div id="c222a">
+          ${usericon}
+          <p>${fullname}</p>
+        </div>
+        <div>
+          <p>
+            ${content}
+          </p>
+        </div>
+        <hr />
+        <div id="c222c">
+          <style>
+            #liked {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              padding: 5px;
+              border-radius: var(--bd-radius);
+              cursor: pointer;
+              background: var(--accent);
+            }
+            #liked:hover {
+              background: var(--tint);
+              // color: white;
+            }
+          </style>
+          <span id="liked">
+            ${likeicon}
+            Like
+          </span>
+          <span id="c222c1">
+            ${comment}
+            Comment
+          </span>
+        </div>
+        <hr />
+        <div id="c222b">
+          ${usericon}
+          <form style="width: 100%; display: flex; align-items: center">
+            <input
+              style="background-color: #d6f1f5"
+              type="text"
+              placeholder="Write a comment..."
+            />
+            ${sendicon}
+          </form>
+        </div>
+      </div>
+  `;
+  } else {
+    postTemplate = `
 <div id="c222">
         <div id="c222a">
           ${usericon}
@@ -63,6 +116,13 @@ export function createPost(fullname, content) {
               display: flex;
               align-items: center;
               gap: 6px;
+              padding: 5px;
+              border-radius: var(--bd-radius);
+              cursor: pointer;
+            }
+            #c222c1:hover {
+              background: var(--tint);
+              // color: white;
             }
           </style>
           <span id="c222c1">
@@ -88,6 +148,7 @@ export function createPost(fullname, content) {
         </div>
       </div>
   `;
+  }
 
   return postTemplate;
 }

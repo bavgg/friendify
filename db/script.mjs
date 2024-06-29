@@ -20,16 +20,20 @@ const createPostsTableQuery = `
   );
 `;
 
+function deleteTable(table) {
+  const query = `
+    DROP TABLE ${table};
+  `;
+  executeQuery(query, `Delete ${table} Table`);
+}
 
-const deletePostsTableQuery = `
-  DROP TABLE posts;
-`;
+
 
 const createLikesTableQuery = `
   CREATE TABLE likes (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    post_id INT REFERENCES posts(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
     UNIQUE(user_id, post_id) -- Ensures a user can like a post only once
   );
 `;
@@ -56,17 +60,8 @@ const executeQuery = (query, description, callback) => {
     }
   });
 };
-executeQuery(createPostsTableQuery, 'Create Posts Table');
-
-// // Function to create the users table
-// const createUsersTable = (callback) => {
-//   executeQuery(deletePostsTableQuery, 'Create Users Table', callback);
-// };
-
-// // Function to create the cart items table
-// const createCartItemsTable = (callback) => {
-//   executeQuery(createCartItemsTableQuery, 'Create Cart Items Table', callback);
-// };
+// deleteTable('likes');
+// executeQuery(createLikesTableQuery, 'Table created.');
 
 
 

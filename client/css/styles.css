@@ -85,6 +85,7 @@ hr {
 :root,
 [data-color-scheme="light"] {
   --accent: #2ca9bc;
+  --tint: #D6F1F5;
   --light: #30b9cf;
 
   --ct-width: 1024px;

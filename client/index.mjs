@@ -95,7 +95,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (postsData !== undefined) {
     postsData.map((post) => {
-      posts = createPost(post.fullname, post.content) + posts;
+      const isLiked = (post.user_id === (getDecodedAuthToken()).id && post.like_id !== null)
+      console.log(isLiked);
+      
+      posts = createPost(post.fullname, post.content, isLiked) + posts;
     });
     postsContainer.innerHTML = posts;
   }
