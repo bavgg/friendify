@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { usericon, likeicon, comment, sendicon } from "../icons/icons.js";
+import { usericon, likeicon, comment, sendicon, LikeIcon } from "../icons/icons.js";
 
 
 export function isAuthenticated() {
@@ -50,7 +50,16 @@ export function createPost(post) {
     console.log('liked');
     
     style = `
-      background: var(--accent);
+      <style>
+        #like-button-${post.post_id} {
+          color: var(--accent);
+        }
+        #like-${post.post_id} {
+
+        }
+      </style>
+      
+      
     `;
   }
   const postTemplate = `
@@ -74,7 +83,6 @@ export function createPost(post) {
                 padding: 5px;
                 border-radius: var(--bd-radius);
                 cursor: pointer;
-                ${style}
               }
               #like-button-${post.post_id}:hover {
                 background: var(--tint);
@@ -82,7 +90,7 @@ export function createPost(post) {
               }
             </style>
             <span id="like-button-${post.post_id}">
-              ${likeicon}
+              ${LikeIcon(post.post_id)}
               Like
             </span>
             <span id="comment-button-${post.post_id}">
@@ -107,5 +115,5 @@ export function createPost(post) {
   
   
 
-  return postTemplate;
+  return style +  postTemplate;
 }

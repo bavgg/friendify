@@ -24,7 +24,7 @@ export async function insert_user(user) {
     const values = [user.firstname, user.lastname, user.email, hashed_password, last_login];
 
     const result = await client.query(query, values);
-    console.log(result.rows[0]);
+    // console.log(result.rows[0]);
     
     return result.rows[0]; // Return the inserted user
   } catch (err) {
@@ -59,7 +59,7 @@ export async function insert_post(user_id, content) {
     const values = [user_id, content];
 
     const result = await client.query(query, values);
-    console.log(result.rows[0]);
+    // console.log(result.rows[0]);
     
     return result.rows[0]; // Return the inserted user
   } catch (err) {
@@ -76,7 +76,6 @@ export async function insert_like(user_id, post_id) {
     const values = [user_id, post_id];
 
     const result = await client.query(query, values);
-    console.log(result.rows[0]);
     
     return result.rows[0]; // Return the inserted user
   } catch (err) {
@@ -84,5 +83,23 @@ export async function insert_like(user_id, post_id) {
     return { error: err.message }; 
   } 
 } 
+
+export async function remove_like(user_id, post_id) {
+  
+  try {
+    const query =
+      "DELETE FROM likes WHERE user_id = $1 AND post_id = $2 RETURNING *";
+    const values = [user_id, post_id];
+
+    const result = await client.query(query, values);
+    console.log(result.rows[0]);
+    
+    return result.rows[0]; // Return the removed like
+  } catch (err) {
+    console.error("Error removing like:", err);
+    return { error: err.message }; 
+  } 
+}
+
 
 // insert_like(17, 2);

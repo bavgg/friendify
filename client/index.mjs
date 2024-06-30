@@ -11,7 +11,6 @@ if (!isAuthenticated()) {
 
 const token = getDecodedAuthToken();
 if (token !== undefined) {
-  console.log("🚀 ~ document.addEventListener ~ token:", token);
   document.getElementById("fullname1").textContent =
     token.firstname + " " + token.lastname;
   document.getElementById("fullname2").textContent =
@@ -25,7 +24,7 @@ if (token !== undefined) {
     .addEventListener("submit", async function (event) {
       event.preventDefault();
 
-      const user_id = token.id;
+      const current_user_id = token.id;
       const content = document.getElementById("content").value;
 
       try {
@@ -34,7 +33,7 @@ if (token !== undefined) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ user_id, content }),
+          body: JSON.stringify({ current_user_id, content }),
         });
 
         if (!response.ok) {
@@ -84,40 +83,64 @@ document.addEventListener("click", (event) => {
     documentLogoutContainer.style.display = "none";
   }
 });
+var isLiked;
+function handleLike(post, current_user_id) {
 
-function handleLike(post_id, user_id) {
-
-  const likeButton = document.getElementById(`like-button-${post_id}`);
+  const likeButton = document.getElementById(`like-button-${post.post_id}`);
   // const likeCount = document.querySelector(`#like-count-${post_id}`);
-  
+  isLiked = post.is_liked;
   likeButton.addEventListener("click", async () => {
-    likeButton.style.background = 'var(--accent)';
-    try {
-      const response = await fetch("/add-like", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id, post_id }),
-      });
+    if(isLiked){
+      isLiked = false;
+      likeButton.style.color = 'black';
+      try {
+        const response = await fetch("/remove-like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ current_user_id, post_id: post.post_id }),
+        });
 
-      if (!response.ok) {
-        const responseDdata = await response.json();
-        alert(responseDdata.message);
+        if (!response.ok) {
+          const responseDdata = await response.json();
+          alert(responseDdata.message);
 
-        throw new Error("Network response was not ok");
+          throw new Error("Network response was not ok");
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
       }
-      
+    }else {
+      isLiked = true;
+      likeButton.style.color = 'var(--accent)';
+      try {
+        const response = await fetch("/add-like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ current_user_id, post_id: post.post_id }),
+        });
 
-    } catch (error) {
-      console.error("Error submitting form:", error);
+        if (!response.ok) {
+          const responseDdata = await response.json();
+          alert(responseDdata.message);
+
+          throw new Error("Network response was not ok");
+        }
+        
+
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     }
   });
 }
 document.addEventListener("DOMContentLoaded", async () => {
   
-  const user_id = token.id;
-  const postsData = await fetchPosts(user_id);
+  const current_user_id = token.id;
+  const postsData = await fetchPosts(current_user_id);
 
   if (postsData !== undefined) {
     postsData.map((post) => {
@@ -128,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     postsContainer.innerHTML = posts;
     postsData.map((post) => {
-      handleLike(post.post_id, user_id);
+      handleLike(post, current_user_id);
     });
     // document.addEventListener('click')
   }

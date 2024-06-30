@@ -91,28 +91,34 @@ function query() {
   // `;
   // executeQuery(query2);
 
-  const query3 = `
-  SELECT
-    users.id AS user_id,
-    posts.id AS post_id,
-    CONCAT(users.firstname, ' ', users.lastname) AS fullname,
-    posts.content,
-    COUNT(likes.id) AS like_count,
-      CASE
-          WHEN EXISTS (
-              SELECT 1
-              FROM likes
-              WHERE likes.post_id = posts.id AND likes.user_id = 17
-          ) THEN TRUE
-          ELSE FALSE
-      END AS is_liked 
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    LEFT JOIN likes ON likes.post_id = posts.id
-    GROUP BY users.id, posts.id
-    ORDER BY posts.created_at DESC
+  const query22 = `
+  DELETE FROM likes WHERE user_id = 17 AND post_id = 2 RETURNING *
   `;
-  executeQuery(query3);
+  executeQuery(query22);
+
+
+  // const query3 = `
+  // SELECT
+  //   users.id AS user_id,
+  //   posts.id AS post_id,
+  //   CONCAT(users.firstname, ' ', users.lastname) AS fullname,
+  //   posts.content,
+  //   COUNT(likes.id) AS like_count,
+  //     CASE
+  //         WHEN EXISTS (
+  //             SELECT 1
+  //             FROM likes
+  //             WHERE likes.post_id = posts.id AND likes.user_id = 17
+  //         ) THEN TRUE
+  //         ELSE FALSE
+  //     END AS is_liked 
+  //   FROM posts
+  //   JOIN users ON posts.user_id = users.id
+  //   LEFT JOIN likes ON likes.post_id = posts.id
+  //   GROUP BY users.id, posts.id
+  //   ORDER BY posts.created_at DESC
+  // `;
+  // executeQuery(query3);
 
 }
 query();

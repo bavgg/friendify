@@ -24,7 +24,7 @@ export async function fetch_posts(user_id) {
   `;
 
   const result = await client.query(query);
-  console.log(result.rows);
+  // console.log(result.rows);
   
   return result.rows;
 }

@@ -1,7 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { insert_user, verify_user, insert_post, insert_like } from '../db/lib/actions.mjs';
+import { insert_user, verify_user, insert_post, insert_like, remove_like } from '../db/lib/actions.mjs';
 import { fetch_posts } from '../db/lib/data.mjs';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -73,16 +73,33 @@ app.post('/add-post', async (req, res) => {
 });
 
 app.post('/add-like', async (req, res) => {
-  const user_id = req.body.user_id;
+  const current_user_id = req.body.current_user_id;
   const post_id = req.body.post_id;
 
-  const result = await insert_like(user_id, post_id);
+  const result = await insert_like(current_user_id, post_id);
   if (result.id !== undefined) {
     return res.status(201).json({ success: true });
   } else {
     return res.status(401).json({ success: false });
   }
 });
+
+app.post('/remove-like', async (req, res) => {
+  const current_user_id = req.body.current_user_id;
+  const post_id = req.body.post_id;
+
+  console.log('userid ', current_user_id, 'postid ', post_id);
+  
+
+  const result = await remove_like(current_user_id, post_id);
+  console.log("🚀 ~ app.post ~ result:", result)
+  if (result) {
+    return res.status(200).json({ success: true });
+  } else {
+    return res.status(400).json({ success: false });
+  }
+});
+
 
 app.get('/posts', async (req, res) => {
   const { user_id } = req.query; 
