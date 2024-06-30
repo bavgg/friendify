@@ -85,9 +85,9 @@ app.post('/add-like', async (req, res) => {
 });
 
 app.get('/posts', async (req, res) => {
-  // const { friend } = req.query; 
+  const { user_id } = req.query; 
 
-  const result = await fetch_posts();
+  const result = await fetch_posts(user_id);
   // console.log(result);
   
 

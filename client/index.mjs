@@ -115,14 +115,16 @@ function handleLike(post_id, user_id) {
   });
 }
 document.addEventListener("DOMContentLoaded", async () => {
-  const postsData = await fetchPosts();
+  
   const user_id = token.id;
+  const postsData = await fetchPosts(user_id);
 
   if (postsData !== undefined) {
     postsData.map((post) => {
-      const isLiked = post.user_id === user_id && post.like_id !== null;
+      console.log('here', post);
+      
 
-      posts = createPost(post, isLiked) + posts;
+      posts = createPost(post) + posts;
     });
     postsContainer.innerHTML = posts;
     postsData.map((post) => {
