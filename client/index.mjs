@@ -46,7 +46,7 @@ if (token !== undefined) {
         const responseData = await response.json();
         if (responseData.success) {
           posts =
-            createPost(token.firstname + " " + token.lastname, content) + posts;
+            createPost(responseData.post) + posts;
 
           postsContainer.innerHTML = posts;
         }
@@ -104,8 +104,6 @@ function handleLike(post, current_user_id) {
 
         if (!response.ok) {
           const responseDdata = await response.json();
-          alert(responseDdata.message);
-
           throw new Error("Network response was not ok");
         }
       } catch (error) {
@@ -125,8 +123,6 @@ function handleLike(post, current_user_id) {
 
         if (!response.ok) {
           const responseDdata = await response.json();
-          alert(responseDdata.message);
-
           throw new Error("Network response was not ok");
         }
         
@@ -144,9 +140,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (postsData !== undefined) {
     postsData.map((post) => {
-      console.log('here', post);
-      
-
       posts = createPost(post) + posts;
     });
     postsContainer.innerHTML = posts;

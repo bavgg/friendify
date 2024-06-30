@@ -61,12 +61,13 @@ app.post('/user/register', async (req, res) => {
 });
 
 app.post('/add-post', async (req, res) => {
-  const user_id = req.body.user_id;
+  const user_id = req.body.current_user_id;
   const content = req.body.content;
 
   const result = await insert_post(user_id, content);
+  
   if (result.id !== undefined) {
-    return res.status(201).json({ success: true });
+    return res.status(201).json({ success: true, post: result });
   } else {
     return res.status(401).json({ success: false });
   }
@@ -77,6 +78,7 @@ app.post('/add-like', async (req, res) => {
   const post_id = req.body.post_id;
 
   const result = await insert_like(current_user_id, post_id);
+  
   if (result.id !== undefined) {
     return res.status(201).json({ success: true });
   } else {
@@ -88,11 +90,7 @@ app.post('/remove-like', async (req, res) => {
   const current_user_id = req.body.current_user_id;
   const post_id = req.body.post_id;
 
-  console.log('userid ', current_user_id, 'postid ', post_id);
-  
-
   const result = await remove_like(current_user_id, post_id);
-  console.log("🚀 ~ app.post ~ result:", result)
   if (result) {
     return res.status(200).json({ success: true });
   } else {
@@ -105,7 +103,7 @@ app.get('/posts', async (req, res) => {
   const { user_id } = req.query; 
 
   const result = await fetch_posts(user_id);
-  // console.log(result);
+  console.log(result);
   
 
   if(result !== undefined && result.length !== 0){

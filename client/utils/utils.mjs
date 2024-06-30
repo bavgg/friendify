@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { usericon, likeicon, comment, sendicon, LikeIcon } from "../icons/icons.js";
+import { usericon, likeicon, liked_icon, comment, sendicon, LikeIcon, likeicon_small } from "../icons/icons.js";
 
 
 export function isAuthenticated() {
@@ -46,21 +46,37 @@ export async function fetchPosts(user_id) {
 
 export function createPost(post) {
   let style = "";
+  let likeCount = '';
+  let icon_like = '';
   if (post.is_liked) {
-    console.log('liked');
     
+    icon_like = liked_icon;
     style = `
       <style>
         #like-button-${post.post_id} {
           color: var(--accent);
         }
-        #like-${post.post_id} {
+      </style>
+    `;
 
+    let like_many = '';
+    if(likeCount > 1) like_many = 's';
+    likeCount = `
+      <style>
+        #all_likes {
+          display: flex;
+          gap: 5px;
+          align-items: center;
         }
       </style>
-      
-      
+      <p id="all_likes">
+        ${likeicon_small} ${post.like_count} like${like_many}
+      </p>
     `;
+
+    
+  }else {
+    icon_like = likeicon;
   }
   const postTemplate = `
   <div id="c222">
@@ -72,6 +88,7 @@ export function createPost(post) {
             <p>
               ${post.content}
             </p>
+            ${likeCount}
           </div>
           <hr />
           <div id="c222c">
@@ -90,7 +107,7 @@ export function createPost(post) {
               }
             </style>
             <span id="like-button-${post.post_id}">
-              ${LikeIcon(post.post_id)}
+              ${icon_like}
               Like
             </span>
             <span id="comment-button-${post.post_id}">

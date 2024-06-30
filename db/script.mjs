@@ -23,6 +23,9 @@ const createPostsTableQuery = `
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `;
+
+
+
 const createLikesTableQuery = `
   CREATE TABLE likes (
     id SERIAL PRIMARY KEY,
@@ -31,20 +34,13 @@ const createLikesTableQuery = `
     UNIQUE(user_id, post_id) -- Ensures a user can like a post only once
   );
 `;
-
-
-
-
-
-
-
 const createCommentsTableQuery = `
   CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
-    post_id INT REFERENCES posts(post_id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
-  );
+  );f
 `;
 
 const executeQuery = (query, callback) => {
@@ -92,7 +88,10 @@ function query() {
   // executeQuery(query2);
 
   const query22 = `
-  DELETE FROM likes WHERE user_id = 17 AND post_id = 2 RETURNING *
+  
+  DELETE FROM posts;
+
+
   `;
   executeQuery(query22);
 
