@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { usericon, likeicon, liked_icon, comment, sendicon, likeicon_small } from "../icons/icons.js";
+import { usericon, likeicon, liked_icon, comment, sendicon, likeicon_small, LikeIcon } from "../icons/icons.js";
 
 export function isAuthenticated() {
   const token = localStorage.getItem("authToken");
@@ -51,20 +51,18 @@ export function LikeCount(small_likeicon, like_count) {
   ` : '';
 }
 
-function LikeIcon(isLiked, liked_icon, like_icon) {
-  if(isLiked) {
-    return liked_icon;
-  }else {
-    return like_icon;
-  }
-}
+
 export function Post(post) {
   let style = "";
   if (post.is_liked) {
+    const bigLike = document.getElementById(`like-${post.post_id}`);
     style = `
       <style>
         #like-button-${post.post_id} {
           color: var(--accent);
+        }
+        #like-${post.post_id} {
+
         }
       </style>
     `;
@@ -105,7 +103,7 @@ export function Post(post) {
       <hr />
       <div id="c222c">
         <span id="like-button-${post.post_id}">
-          ${LikeIcon(post.is_liked, liked_icon, likeicon)}
+          ${LikeIcon(post.post_id)}
           Like
         </span>
         <span id="comment-button-${post.post_id}">

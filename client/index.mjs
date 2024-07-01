@@ -46,8 +46,7 @@ if (token !== undefined) {
 
         const responseData = await response.json();
         if (responseData.success) {
-          posts =
-            Post(responseData.post) + posts;
+          posts = Post(responseData.post) + posts;
 
           postsContainer.innerHTML = posts;
         }
@@ -87,19 +86,22 @@ document.addEventListener("click", (event) => {
 
 function handleLike(post, current_user_id) {
   console.log(post);
-  let isLiked;
+  let isLiked = post.is_liked;
   let likeCount = parseInt(post.like_count);
-
+  document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(
+    likeicon_small,
+    parseInt(post.like_count)
+  );
   const likeButton = document.getElementById(`like-button-${post.post_id}`);
 
-  document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, parseInt(post.like_count));
-
-  isLiked = post.is_liked;
   likeButton.addEventListener("click", async () => {
-    if(isLiked){
-      document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, likeCount = likeCount - 1);
+    if (isLiked) {
+      document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
+          "black";
+      document.getElementById(`like-count-${post.post_id}`).innerHTML =
+        LikeCount(likeicon_small, (likeCount = likeCount - 1));
       isLiked = false;
-      likeButton.style.color = 'black';
+      likeButton.style.color = "black";
       try {
         const response = await fetch("/remove-like", {
           method: "POST",
@@ -116,10 +118,13 @@ function handleLike(post, current_user_id) {
       } catch (error) {
         console.error("Error submitting form:", error);
       }
-    }else {
+    } else {
       isLiked = true;
-      document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, likeCount = likeCount + 1);
-      likeButton.style.color = 'var(--accent)';
+      document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
+          "var(--accent)";
+      document.getElementById(`like-count-${post.post_id}`).innerHTML =
+        LikeCount(likeicon_small, (likeCount = likeCount + 1));
+      likeButton.style.color = "var(--accent)";
       try {
         const response = await fetch("/add-like", {
           method: "POST",
@@ -133,16 +138,17 @@ function handleLike(post, current_user_id) {
           const responseDdata = await response.json();
           throw new Error("Network response was not ok");
         }
-        
-
       } catch (error) {
         console.error("Error submitting form:", error);
       }
     }
   });
 }
+
+function fillLike(post_id) {
+  document.getElementById(`like-${post_id}`).setAttribute("fill", "red");
+}
 document.addEventListener("DOMContentLoaded", async () => {
-  
   const current_user_id = token.id;
   const postsData = await fetchPosts(current_user_id);
 
@@ -152,8 +158,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     postsContainer.innerHTML = posts;
     postsData.map((post) => {
+      if (post.is_liked) {
+        document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
+          "var(--accent)";
+      }
+
       handleLike(post, current_user_id);
     });
-    // document.addEventListener('click')
   }
 });
