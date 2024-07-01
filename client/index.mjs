@@ -45,8 +45,10 @@ if (token !== undefined) {
         }
 
         const responseData = await response.json();
+        const post  = {...responseData.post, fullname: token.firstname + " " + token.lastname};
+        
         if (responseData.success) {
-          posts = Post(responseData.post) + posts;
+          posts = Post(post) + posts;
 
           postsContainer.innerHTML = posts;
         }
@@ -145,9 +147,7 @@ function handleLike(post, current_user_id) {
   });
 }
 
-function fillLike(post_id) {
-  document.getElementById(`like-${post_id}`).setAttribute("fill", "red");
-}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const current_user_id = token.id;
   const postsData = await fetchPosts(current_user_id);

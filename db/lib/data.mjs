@@ -20,7 +20,7 @@ export async function fetch_posts(user_id) {
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON likes.post_id = posts.id
     GROUP BY users.id, posts.id
-    ORDER BY posts.created_at DESC
+    ORDER BY posts.created_at ASC
   `;
 
   const result = await client.query(query);
