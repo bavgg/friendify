@@ -1,6 +1,7 @@
 import { isAuthenticated, getDecodedAuthToken } from "./utils/utils.mjs";
 
-import { fetchPosts, createPost } from "./utils/utils.mjs";
+import { fetchPosts, Post, LikeCount } from "./utils/utils.mjs";
+import { likeicon_small } from "./icons/icons.js";
 
 const postsContainer = document.getElementById("c222d");
 let posts = "";
@@ -46,7 +47,7 @@ if (token !== undefined) {
         const responseData = await response.json();
         if (responseData.success) {
           posts =
-            createPost(responseData.post) + posts;
+            Post(responseData.post) + posts;
 
           postsContainer.innerHTML = posts;
         }
@@ -83,14 +84,20 @@ document.addEventListener("click", (event) => {
     documentLogoutContainer.style.display = "none";
   }
 });
-var isLiked;
+
 function handleLike(post, current_user_id) {
+  console.log(post);
+  let isLiked;
+  let likeCount = parseInt(post.like_count);
 
   const likeButton = document.getElementById(`like-button-${post.post_id}`);
-  // const likeCount = document.querySelector(`#like-count-${post_id}`);
+
+  document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, parseInt(post.like_count));
+
   isLiked = post.is_liked;
   likeButton.addEventListener("click", async () => {
     if(isLiked){
+      document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, likeCount = likeCount - 1);
       isLiked = false;
       likeButton.style.color = 'black';
       try {
@@ -111,6 +118,7 @@ function handleLike(post, current_user_id) {
       }
     }else {
       isLiked = true;
+      document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(likeicon_small, likeCount = likeCount + 1);
       likeButton.style.color = 'var(--accent)';
       try {
         const response = await fetch("/add-like", {
@@ -140,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (postsData !== undefined) {
     postsData.map((post) => {
-      posts = createPost(post) + posts;
+      posts = Post(post) + posts;
     });
     postsContainer.innerHTML = posts;
     postsData.map((post) => {

@@ -103,8 +103,6 @@ app.get('/posts', async (req, res) => {
   const { user_id } = req.query; 
 
   const result = await fetch_posts(user_id);
-  console.log(result);
-  
 
   if(result !== undefined && result.length !== 0){
     return res.status(201).json(result);
