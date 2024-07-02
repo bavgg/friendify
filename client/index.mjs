@@ -85,7 +85,7 @@ function Nav() {
 }
 async function handleAddPostRequest(event) {
   event.preventDefault();
-  const postsContainer = document.getElementById("c222d");
+  const PostsContainer = document.getElementById("c222d");
   const current_user_id = token.id;
   const content = document.getElementById("content").value;
 
@@ -102,7 +102,7 @@ async function handleAddPostRequest(event) {
   post = { ...post, post_id: post.id};
   console.log(post);
   if (response.success) {
-    postsContainer.innerHTML = Post(post, current_user_id) + postsContainer.innerHTML;
+    PostsContainer.prepend( Post(post, current_user_id) );
   }
 }
 
@@ -231,59 +231,21 @@ function Post(post, current_user_id) {
         </form>
       </div>
   `;
-  return `
-    <div id="c222">
-      <div id="c222a">
-        ${usericon}
-        <p>${post.fullname}</p>
-      </div>
-      <div>
-        <p>
-          ${post.content}
-        </p>
-        <p id="like-count-${post.post_id}" class="like-count">
-          ${LikeCount(likeicon_small, post.like_count, post.is_liked)}
-        </p>
-      </div>
-      <hr />
-      <div id="c222c">
-        <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ''} like-button">
-          ${LikeIcon(post.post_id, post.is_liked)}
-          Like
-        </span>
-        <span id="comment-button-${post.post_id}">
-          ${commentIcon}
-          Comment
-        </span>
-      </div>
-      <hr />
-      <div id="c222b">
-        ${usericon}
-        <form style="width: 100%; display: flex; align-items: center">
-          <input
-            style="background-color: #d6f1f5"
-            type="text"
-            placeholder="Write a comment..."
-          />
-          ${sendicon}
-        </form>
-      </div>
-    </div>
-  `;
+  return PostContainer;
 }
 async function Posts() {
   queueMicrotask(async () => {
     const token = getDecodedAuthToken();
     const current_user_id = token.id;
 
-    const postsContainer = document.getElementById("c222d");
-    postsContainer.innerHTML = "<div>Loading...</div>";
+    const PostsContainer = document.getElementById("c222d");
+    PostsContainer.innerHTML = "<div>Loading...</div>";
 
     const posts = await fetchPosts(current_user_id);
 
-    postsContainer.innerHTML = "";
+    PostsContainer.innerHTML = "";
     posts.map((post) => {
-      postsContainer.innerHTML += Post(post, current_user_id);
+      PostsContainer.appendChild(Post(post, current_user_id));
     });
   });
 }
