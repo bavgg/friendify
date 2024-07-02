@@ -1,0 +1,22 @@
+
+
+<div id="parent"></div>
+<script>
+    (document.getElementById('parent')).innerHTML = '<button id="click">Click</button>'
+    document.getElementById('click').addEventListener('click', () => {
+        console.log("Clicked");
+    })
+
+    const fruits = ['apple', 'orange'];
+
+    async function prutas(fruit) {
+        Promise.resolve(fruit).then(() => {
+            console.log('micro', fruit);
+        });
+    }
+
+    console.log('script');
+    fruits.map(fruit => {
+        prutas(fruit);
+    })
+</script>

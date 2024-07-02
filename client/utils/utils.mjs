@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { usericon, likeicon, liked_icon, comment, sendicon, likeicon_small, LikeIcon } from "../icons/icons.js";
+import { usericon, likeicon, liked_icon, sendicon, likeicon_small, LikeIcon } from "../icons/icons.js";
 
 export function isAuthenticated() {
   const token = localStorage.getItem("authToken");

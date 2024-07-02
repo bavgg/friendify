@@ -1,169 +1,330 @@
-import { isAuthenticated, getDecodedAuthToken } from "./utils/utils.mjs";
-
-import { fetchPosts, Post, LikeCount } from "./utils/utils.mjs";
-import { likeicon_small } from "./icons/icons.js";
-
-const postsContainer = document.getElementById("c222d");
-let posts = "";
-
-if (!isAuthenticated()) {
-  window.location.href = "/login";
-}
+import {
+  fbicon,
+  searchicon,
+  usericon,
+  signoutIcon,
+  LikeIcon,
+  likeicon_small,
+  commentIcon,
+  sendicon,
+} from "./icons/icons.js";
+import {
+  isAuthenticated,
+  getDecodedAuthToken,
+  fetchPosts,
+  LikeCount,
+} from "./utils/utils.mjs";
 
 const token = getDecodedAuthToken();
-if (token !== undefined) {
-  document.getElementById("fullname1").textContent =
-    token.firstname + " " + token.lastname;
-  document.getElementById("fullname2").textContent =
-    token.firstname + " " + token.lastname;
-  document.getElementById(
-    "content"
-  ).placeholder = `What's in your mind ${token.firstname}`;
+function ProfileMenu() {
+  setTimeout(() => {
+    console.log("🚀 ~ setTimeout ~ setTimeout:");
+    /* -------------------------------------------------------------------------- */
+    /*                               logout function                              */
+    /* -------------------------------------------------------------------------- */
+    document.getElementById("c121b").addEventListener("click", () => {
+      localStorage.removeItem("authToken");
+      window.location.href = "/";
+    });
+    /* -------------------------------------------------------------------------- */
+    /*                             hide or show logout                            */
+    /* -------------------------------------------------------------------------- */
+    const documentProfileButton = document.getElementById("c122");
+    const documentLogoutContainer = document.getElementById("c121");
 
-  document
-    .getElementById("form")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const current_user_id = token.id;
-      const content = document.getElementById("content").value;
-
-      try {
-        const response = await fetch("/add-post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ current_user_id, content }),
-        });
-
-        if (!response.ok) {
-          const responseDdata = await response.json();
-          alert(responseDdata.message);
-
-          throw new Error("Network response was not ok");
-        }
-
-        const responseData = await response.json();
-        const post  = {...responseData.post, fullname: token.firstname + " " + token.lastname};
-        
-        if (responseData.success) {
-          posts = Post(post) + posts;
-
-          postsContainer.innerHTML = posts;
-        }
-        // window.location.href = "http://localhost:3000/";
-      } catch (error) {
-        console.error("Error submitting form:", error);
+    documentProfileButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      if (documentLogoutContainer.style.display === "flex") {
+        documentLogoutContainer.style.display = "none";
+      } else {
+        documentLogoutContainer.style.display = "flex";
       }
     });
+    // Hide documentLogoutContainer when clicking outside
+    document.addEventListener("click", (event) => {
+      if (
+        !documentLogoutContainer.contains(event.target) &&
+        event.target !== documentProfileButton
+      ) {
+        documentLogoutContainer.style.display = "none";
+      }
+    });
+  }, 0);
+  return `
+        <div id="c122">
+          ${usericon}
+        </div>
+        <div id="c121" tabindex="0" style="display: none;">
+          <div id="c121a">
+            ${usericon}
+            <p id="fullname1"></p>
+          </div>
+          <div id="c121b">
+            ${signoutIcon}
+            <p id="">Log Out</p>
+          </div>
+        </div>
+  `;
 }
 
-document.getElementById("c121b").addEventListener("click", () => {
-  localStorage.removeItem("authToken");
-  window.location.href = "/";
-});
+function Nav() {
+  return `
+  <nav id="c1">
+    <div id="c11">
+      ${fbicon}
+      <div id="c111">
+        ${searchicon}
+        <input id="searchbar" type="text" />
+      </div>
+    </div>
+    <div id="c12">
+      ${ProfileMenu()}
+    </div>
+  </nav>
+  `;
+}
+async function handleAddPostRequest(event) {
+  event.preventDefault();
+  const postsContainer = document.getElementById("c222d");
+  const current_user_id = token.id;
+  const content = document.getElementById("content").value;
 
-const documentProfileButton = document.getElementById("c122");
-const documentLogoutContainer = document.getElementById("c121");
+  let response = await fetch("/add-post", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ current_user_id, content }),
+  });
 
-documentProfileButton.addEventListener("click", (event) => {
-  event.stopPropagation();
-  if (documentLogoutContainer.style.display === "flex") {
-    documentLogoutContainer.style.display = "none";
-  } else {
-    documentLogoutContainer.style.display = "flex";
-  }
-});
-
-// Hide documentLogoutContainer when clicking outside
-document.addEventListener("click", (event) => {
-  if (
-    !documentLogoutContainer.contains(event.target) &&
-    event.target !== documentProfileButton
-  ) {
-    documentLogoutContainer.style.display = "none";
-  }
-});
-
-function handleLike(post, current_user_id) {
+  response = await response.json();
+  let post  = {...response.post, fullname: token.firstname + " " + token.lastname};
+  post = { ...post, post_id: post.id};
   console.log(post);
-  let isLiked = post.is_liked;
-  let likeCount = parseInt(post.like_count);
-  document.getElementById(`like-count-${post.post_id}`).innerHTML = LikeCount(
-    likeicon_small,
-    parseInt(post.like_count)
-  );
-  const likeButton = document.getElementById(`like-button-${post.post_id}`);
+  if (response.success) {
+    postsContainer.innerHTML = Post(post, current_user_id) + postsContainer.innerHTML;
+  }
+}
 
-  likeButton.addEventListener("click", async () => {
-    if (isLiked) {
-      document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
-          "black";
-      document.getElementById(`like-count-${post.post_id}`).innerHTML =
-        LikeCount(likeicon_small, (likeCount = likeCount - 1));
-      isLiked = false;
-      likeButton.style.color = "black";
-      try {
-        const response = await fetch("/remove-like", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ current_user_id, post_id: post.post_id }),
-        });
+function PostForm() {
+  setTimeout(() => {
+    
+    const form = document.getElementById("form");
 
-        if (!response.ok) {
-          const responseDdata = await response.json();
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
-    } else {
-      isLiked = true;
-      document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
-          "var(--accent)";
-      document.getElementById(`like-count-${post.post_id}`).innerHTML =
-        LikeCount(likeicon_small, (likeCount = likeCount + 1));
-      likeButton.style.color = "var(--accent)";
-      try {
-        const response = await fetch("/add-like", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ current_user_id, post_id: post.post_id }),
-        });
+    form.addEventListener('submit', (event) => handleAddPostRequest(event));
+  }, 0);
+  return `
+  <div id="c221">
+    ${usericon}
+    <form id="form" style="width: 100%">
+      <input id="content" type="text" placeholder="What's in your mind Jonas" required/>
+      <button style="width: fit-content">Post</button>
+    </form>
+  </div>
+  `;
+}
 
-        if (!response.ok) {
-          const responseDdata = await response.json();
-          throw new Error("Network response was not ok");
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
-    }
+async function handleUnlikeRequest(current_user_id, post_id) {
+  const response = await fetch("/remove-like", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ current_user_id, post_id }),
   });
 }
 
+async function handleLikeRequest(current_user_id, post_id) {
+  const response = await fetch("/add-like", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ current_user_id, post_id }),
+  });
+}
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const current_user_id = token.id;
-  const postsData = await fetchPosts(current_user_id);
+function handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small) {
+  console.log("🚀 ~ handleLikeCountUI ~ handleLikeCountUI:")
+  let like_many = '';
+  if(likeCount > 1) like_many = 's';
+  const like_count = likeCount > 0 ? `${likeicon_small} ${likeCount} like${like_many}` : '';
+  LikeCountContainer.innerHTML = like_count;
+}
+function handleUnlikeUI(likeButton, likeIcon) {
+  likeIcon.style.stroke = "black";
+  likeButton.style.color = "black";
+}
+function handleLikeUI(likeButton, likeIcon) {
+  likeIcon.style.stroke = "var(--accent)";
+  likeButton.style.color = "var(--accent)";
+}
 
-  if (postsData !== undefined) {
-    postsData.map((post) => {
-      posts = Post(post) + posts;
-    });
-    postsContainer.innerHTML = posts;
-    postsData.map((post) => {
-      if (post.is_liked) {
-        document.querySelector(`#like-${post.post_id} #primary`).style.stroke =
-          "var(--accent)";
+function Post(post, current_user_id) {
+  setTimeout(() => {
+    const LikeButtonRef = document.getElementById(`like-button-${post.post_id}`);
+    const LikeIconRef = document.querySelector(`#like-${post.post_id} #primary`);
+    const LikeCountContainer = document.getElementById(`like-count-${post.post_id}`);
+
+    let isLiked = post.is_liked;
+    let likeCount = post.like_count ? parseInt(post.like_count) : 0;
+    LikeButtonRef.addEventListener("click", () => {
+
+      console.log(isLiked);
+      if (isLiked) {
+        
+        handleUnlikeUI(LikeButtonRef, LikeIconRef);
+        isLiked = false;
+        likeCount -= 1
+        handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
+        handleUnlikeRequest(current_user_id, post.post_id);
+        
+      } else {
+
+        handleLikeUI(LikeButtonRef, LikeIconRef);
+        isLiked = true;
+        likeCount += 1
+        handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
+        handleLikeRequest(current_user_id, post.post_id);
+        
       }
-
-      handleLike(post, current_user_id);
     });
+  }, 0);
+
+  const PostContainer = document.createElement('div');
+  PostContainer.id = 'c222';
+
+  PostContainer.innerHTML = `
+      <div id="c222a">
+        ${usericon}
+        <p>${post.fullname}</p>
+      </div>
+      <div>
+        <p>
+          ${post.content}
+        </p>
+        <p id="like-count-${post.post_id}" class="like-count">
+          ${LikeCount(likeicon_small, post.like_count, post.is_liked)}
+        </p>
+      </div>
+      <hr />
+      <div id="c222c">
+        <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ''} like-button">
+          ${LikeIcon(post.post_id, post.is_liked)}
+          Like
+        </span>
+        <span id="comment-button-${post.post_id}">
+          ${commentIcon}
+          Comment
+        </span>
+      </div>
+      <hr />
+      <div id="c222b">
+        ${usericon}
+        <form style="width: 100%; display: flex; align-items: center">
+          <input
+            style="background-color: #d6f1f5"
+            type="text"
+            placeholder="Write a comment..."
+          />
+          ${sendicon}
+        </form>
+      </div>
+  `;
+  return `
+    <div id="c222">
+      <div id="c222a">
+        ${usericon}
+        <p>${post.fullname}</p>
+      </div>
+      <div>
+        <p>
+          ${post.content}
+        </p>
+        <p id="like-count-${post.post_id}" class="like-count">
+          ${LikeCount(likeicon_small, post.like_count, post.is_liked)}
+        </p>
+      </div>
+      <hr />
+      <div id="c222c">
+        <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ''} like-button">
+          ${LikeIcon(post.post_id, post.is_liked)}
+          Like
+        </span>
+        <span id="comment-button-${post.post_id}">
+          ${commentIcon}
+          Comment
+        </span>
+      </div>
+      <hr />
+      <div id="c222b">
+        ${usericon}
+        <form style="width: 100%; display: flex; align-items: center">
+          <input
+            style="background-color: #d6f1f5"
+            type="text"
+            placeholder="Write a comment..."
+          />
+          ${sendicon}
+        </form>
+      </div>
+    </div>
+  `;
+}
+async function Posts() {
+  queueMicrotask(async () => {
+    const token = getDecodedAuthToken();
+    const current_user_id = token.id;
+
+    const postsContainer = document.getElementById("c222d");
+    postsContainer.innerHTML = "<div>Loading...</div>";
+
+    const posts = await fetchPosts(current_user_id);
+
+    postsContainer.innerHTML = "";
+    posts.map((post) => {
+      postsContainer.innerHTML += Post(post, current_user_id);
+    });
+  });
+}
+
+// print = nav, grid
+// task que - profile menu
+// micro que = posts
+
+function Grid() {
+  return `
+  <div id="c2">
+    <div id="c21">
+      <div id="c211">
+        ${usericon}
+        <p id="fullname2"></p>
+      </div>
+    </div>
+    <div id="c22">
+      ${PostForm()}
+      <div id="c222d">
+        <!-- posts -->
+      </div>
+    </div>
+  </div>
+  `;
+}
+async function Test() {
+  console.log("test");
+}
+
+function Init() {
+  if (!isAuthenticated()) {
+    window.location.href = "/login";
   }
-});
+
+  Posts();
+
+  return `
+    ${Nav()}
+    ${Grid()}
+    `;
+}
+
+document.querySelector("body").innerHTML = Init();

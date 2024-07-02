@@ -12,7 +12,7 @@ export async function fetch_posts(user_id) {
           WHEN EXISTS (
               SELECT 1
               FROM likes
-              WHERE likes.post_id = posts.id AND likes.user_id = ${user_id}
+              WHERE likes.post_id = posts.id AND likes.user_id = $1
           ) THEN TRUE
           ELSE FALSE
       END AS is_liked 
@@ -20,10 +20,11 @@ export async function fetch_posts(user_id) {
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON likes.post_id = posts.id
     GROUP BY users.id, posts.id
-    ORDER BY posts.created_at ASC
+    ORDER BY posts.created_at DESC
   `;
+  const values  = [user_id];
 
-  const result = await client.query(query);
+  const result = await client.query(query, values);
   // console.log(result.rows);
   
   return result.rows;

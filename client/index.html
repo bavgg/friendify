@@ -12,58 +12,29 @@
       href="https://www.svgrepo.com/show/461325/facebook-circle.svg"
       type="image/svg+xml"
     />
+    <style>
+      .like-button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px;
+        border-radius: var(--bd-radius);
+        cursor: pointer;
+      }
+      .liked{
+        color: var(--accent);
+      }
+      .like-button:hover {
+        background: var(--tint);
+      }
+      like-count {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+    </style>
   </head>
   <body>
-    <nav id="c1">
-      <div id="c11">
-        <!-- facebook icon -->
-        <script src="./icons/fbicon.js"></script>
-        <div id="c111">
-          <!-- search icon -->
-          <script src="./icons/searchicon.js"></script>
-          <input id="searchbar" type="text" />
-        </div>
-      </div>
-      <div id="c12">
-        <div id="c122">
-            <script src="./icons/usericon.js"></script>
-        </div>
-        <div id="c121" tabindex="0" style="display: none;">
-          <div id="c121a">
-            <script src="./icons/usericon.js"></script>
-            <p id="fullname1"></p>
-          </div>
-          <div id="c121b">
-            <script src="./icons/logout.js"></script>
-            <p id="">Log Out</p>
-          </div>
-        </div>
-        
-      </div>
-    </nav>
-    <!-- grid -->
-    <div id="c2">
-      <div id="c21">
-        <div id="c211">
-          <script src="./icons//usericon.js"></script>
-          <p id="fullname2"></p>
-        </div>
-      </div>
-      <div id="c22">
-        <div id="c221">
-          <script src="./icons//usericon.js"></script>
-          <form id="form" style="width: 100%">
-            <input id="content" type="text" placeholder="What's in your mind Jonas" />
-            <button style="width: fit-content">Post</button>
-          </form>
-        </div>
-
-        <div id="c222d">
-          
-        </div>
-      </div>
-    </div>
-
     <script src="./dist/index.js"></script>
   </body>
 </html>
