@@ -159,8 +159,15 @@ function handleLikeUI(likeButton, likeIcon) {
   likeIcon.style.stroke = "var(--accent)";
   likeButton.style.color = "var(--accent)";
 }
-
-function Post(post, current_user_id) {
+function CommentButton(post, commentIcon) {
+  return `
+        <span id="comment-button-${post.post_id}">
+          ${commentIcon}
+          Comment
+        </span>
+  `
+}
+function LikeButton(post, current_user_id) {
   setTimeout(() => {
     const LikeButtonRef = document.getElementById(`like-button-${post.post_id}`);
     const LikeIconRef = document.querySelector(`#like-${post.post_id} #primary`);
@@ -190,6 +197,16 @@ function Post(post, current_user_id) {
       }
     });
   }, 0);
+  return `
+          <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ''} like-button">
+            ${LikeIcon(post.post_id, post.is_liked)}
+            Like
+          </span>
+  `
+}
+
+function Post(post, current_user_id) {
+  
 
   const PostContainer = document.createElement('div');
   PostContainer.id = 'c222';
@@ -209,14 +226,8 @@ function Post(post, current_user_id) {
       </div>
       <hr />
       <div id="c222c">
-        <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ''} like-button">
-          ${LikeIcon(post.post_id, post.is_liked)}
-          Like
-        </span>
-        <span id="comment-button-${post.post_id}">
-          ${commentIcon}
-          Comment
-        </span>
+        ${LikeButton(post, current_user_id)}
+        ${CommentButton(post, commentIcon)}
       </div>
       <hr />
       <div id="c222b">
