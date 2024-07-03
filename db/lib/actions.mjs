@@ -118,7 +118,7 @@ export async function insert_comment(content, user_id, post_id) {
     )
     SELECT inserted_comment.*, users.firstname || ' ' || users.lastname AS fullname
     FROM inserted_comment
-    JOIN users ON users.id = inserted_comment.user_id;
+    JOIN users ON users.user_id = inserted_comment.user_id;
     `;
   const values = [content, user_id, post_id];
   const result = await client.query(query, values);

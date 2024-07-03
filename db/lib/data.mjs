@@ -15,9 +15,9 @@ export async function fetch_posts(user_id) {
                     'comment_content',
                     c.content,
                     'comment_user_id',
-                    u.user_id,
+                    c.user_id,
                     'comment_user_name',
-                    CONCAT (u.firstname, ' ', u.lastname)
+                    CONCAT (cu.firstname, ' ', cu.lastname)
                 )
             ) filter (
                 where
@@ -39,6 +39,7 @@ export async function fetch_posts(user_id) {
             posts p
             left join "comments" c on p.post_id = c.post_id
             join users u on u.user_id = p.user_id
+            left join users cu on cu.user_id = c.user_id
             left join likes l on l.post_id = p.post_id
         group by
             u.user_id,

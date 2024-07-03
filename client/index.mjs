@@ -109,6 +109,7 @@ async function handleAddPostRequest(event) {
 }
 
 function PostForm() {
+  const firstname = token.firstname;
   setTimeout(() => {
     const form = document.getElementById("form");
 
@@ -118,7 +119,7 @@ function PostForm() {
   <div id="c221">
     ${usericon}
     <form id="form" style="width: 100%">
-      <input id="content" type="text" placeholder="What's in your mind Jonas" required/>
+      <input id="content" type="text" placeholder="What's in your mind ${firstname}" required/>
       <button style="width: fit-content">Post</button>
     </form>
   </div>
@@ -232,6 +233,8 @@ function CommentForm(post, sendicon) {
       const user_id = token.user_id;
       const post_id = post.post_id;
 
+      console.log(user_id);
+
       let response = await fetch("/add-comment", {
         method: "POST",
         headers: {
@@ -241,9 +244,16 @@ function CommentForm(post, sendicon) {
       });
     
       response = await response.json();
-      console.log(response);
-      // TODO - fix this tom
-      CommentsRef.appendChild(response)
+
+      const div = document.createElement('div');
+      div.innerHTML = `
+        ${usericon}
+        <div class="flexcol">
+          <p id="${response.comment_id}">${response.fullname}</p>
+          <p>${response.content}</p>
+        </div>
+      `
+      CommentsRef.appendChild(div)
 
     });
   }, 0);
@@ -264,12 +274,13 @@ function CommentForm(post, sendicon) {
 }
 
 function Comments(comments, usericon) {
+  console.log(comments);
   if(comments !== null) {
     const comms = comments.map(comment => `
       <div>
         ${usericon}
         <div class="flexcol">
-          <p id="${comment.comment_user_name}">${comment.comment_user_name}</p>
+          <p id="${comment.comment_id}">${comment.comment_user_name}</p>
           <p>${comment.comment_content}</p>
         </div>
       </div>
