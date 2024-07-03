@@ -96,6 +96,7 @@ body {
     display: none;
   }
 }
+
 #c221 {
   display: flex;
   gap: 10px;
@@ -124,7 +125,7 @@ body {
   display: flex;
   gap: 10px;
   border-radius: var(--bd-radius);
-  align-items: center;
+  flex-direction: column;
   /* padding: 12px; */
 }
 #c222c {

@@ -75,11 +75,25 @@ hr {
   color: black;
 }
 
-.flex {
+.flexfull {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: 10px;
+  align-items: center;
+  flex-direction: column;
+}
+.flexrow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.flexcol {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+.border {
+  border: 2px solid black;
+  border-radius: var(--bd-radius);
 }
 
 :root,

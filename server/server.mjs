@@ -1,7 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { insert_user, verify_user, insert_post, insert_like, remove_like } from '../db/lib/actions.mjs';
+import { insert_user, verify_user, insert_post, insert_like, remove_like, insert_comment } from '../db/lib/actions.mjs';
 import { fetch_posts } from '../db/lib/data.mjs';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -78,8 +78,7 @@ app.post('/add-like', async (req, res) => {
   const post_id = req.body.post_id;
 
   const result = await insert_like(current_user_id, post_id);
-  
-  if (result.id !== undefined) {
+  if (result) {
     return res.status(201).json({ success: true });
   } else {
     return res.status(401).json({ success: false });
@@ -98,11 +97,21 @@ app.post('/remove-like', async (req, res) => {
   }
 });
 
+app.post('/add-comment', async( req, res ) => {
+  const content = req.body.content;
+  const user_id = req.body.user_id;
+  const post_id = req.body.post_id;
+
+  const result = await insert_comment(content, user_id, post_id);
+  return res.json(result);
+});
+
 
 app.get('/posts', async (req, res) => {
   const { user_id } = req.query; 
 
   const result = await fetch_posts(user_id);
+  console.log(result);
 
   if(result !== undefined && result.length !== 0){
     return res.status(201).json(result);

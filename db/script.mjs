@@ -36,11 +36,11 @@ const createLikesTableQuery = `
 `;
 const createCommentsTableQuery = `
   CREATE TABLE comments (
-    id SERIAL PRIMARY KEY,
+    comment_id SERIAL PRIMARY KEY,
     post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
-  );f
+    content TEXT NOT NULL
+  );
 `;
 
 const executeQuery = (query, callback) => {
@@ -87,13 +87,17 @@ function query() {
   // `;
   // executeQuery(query2);
 
-  const query22 = `
+  // const query22 = `
   
-  DELETE FROM posts;
+  // SELECT c.comment_id, c.content, c.user_id, u.firstname, u.lastname, c.post_id, p.content AS post_content
+  // FROM comments c
+  // JOIN users u ON c.user_id = u.id
+  // JOIN posts p ON c.post_id = p.id
+  // ORDER BY c.post_id, c.comment_id;
 
 
-  `;
-  executeQuery(query22);
+  // `;
+  // executeQuery(query22);
 
 
   // const query3 = `
@@ -118,6 +122,53 @@ function query() {
   //   ORDER BY posts.created_at DESC
   // `;
   // executeQuery(query3);
+
+  const query3 = `
+        select
+            u.firstname || ' ' || u.lastname as fullname,
+            p.post_id,
+            p.user_id,
+            p."content",
+            count(distinct l.like_id) as like_count,
+            json_agg (
+                json_build_object (
+                    'comment_id',
+                    c.comment_id,
+                    'comment_content',
+                    c.content,
+                    'comment_user_id',
+                    u.user_id,
+                    'comment_user_name',
+                    CONCAT (u.firstname, ' ', u.lastname)
+                )
+            ) filter (
+                where
+                    c.comment_id is not null
+            ) as comments,
+            case
+                when exists (
+                    select
+                        1
+                    from
+                        likes l
+                    where
+                        l.post_id = p.post_id
+                        and l.user_id = 17
+                ) then true
+                else false
+            end as is_liked
+        from
+            posts p
+            left join "comments" c on p.post_id = c.post_id
+            join users u on u.user_id = p.user_id
+            left join likes l on l.post_id = p.post_id
+        group by
+            u.user_id,
+            p.post_id
+        order by
+            p.created_at desc
+  `;
+  executeQuery(query3);
 
 }
 query();
