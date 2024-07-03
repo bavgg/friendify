@@ -85,7 +85,7 @@ function Nav() {
 async function handleAddPostRequest(event) {
   event.preventDefault();
   const PostsContainer = document.getElementById("c222d");
-  const current_user_id = token.user_idid;
+  const current_user_id = token.user_id;
   const content = document.getElementById("content").value;
 
   let response = await fetch("/add-post", {
