@@ -7,18 +7,11 @@ Facebook Clone with like, comment, logout, login, and register functions.
 
 ### Built with
 
-- JavaScript
-- CSS - Grid, Flexbox
-- HTML
-- Webpack
-- JWToken
-- Express
-- PostgreSQL
+- JavaScript, CSS - Grid, Flexbox, HTML, Webpack, JWT, Express.js, PostgreSQL, Node.js
 
 ### Tools
 
-- ChatGPT
-- VSCode
+- ChatGPT, VSCode
 
 ### Install
 
