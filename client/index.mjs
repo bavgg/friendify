@@ -97,13 +97,11 @@ async function handleAddPostRequest(event) {
   });
 
   response = await response.json();
-  console.log("🚀 ~ handleAddPostRequest ~ response:", response)
   
   let post = {
     ...response.post,
     fullname: token.firstname + " " + token.lastname,
   };
-  console.log(post);
   
   if (response.success) {
     PostsContainer.prepend(Post(post, current_user_id));
@@ -171,7 +169,7 @@ function CommentButton(post, commentIcon) {
     );
 
     CommentButtonRef.addEventListener("click", () => {
-      console.log("Clicked", post.post_id);
+
     });
   }, 0);
 
@@ -182,51 +180,12 @@ function CommentButton(post, commentIcon) {
         </span>
   `;
 }
-// function LikeButton(post, current_user_id) {
-//   document.addEventListener('DOMContentLoaded', () => {
-//     const LikeButtonRef = document.getElementById(`like-button-${post.post_id}`);
-//     console.log("🚀 ~ LikeButton ~ LikeButtonRef:", LikeButtonRef);
-//     // ... rest of your code ...
-//     const LikeIconRef = document.querySelector(
-//       `#like-${post.post_id} #primary`
-//     );
-//     const LikeCountContainer = document.getElementById(
-//       `like-count-${post.post_id}`
-//     );
 
-//     let isLiked = post.is_liked;
-//     let likeCount = post.like_count ? parseInt(post.like_count) : 0;
-//     LikeButtonRef.addEventListener("click", () => {
-//       console.log(isLiked);
-//       if (isLiked) {
-//         handleUnlikeUI(LikeButtonRef, LikeIconRef);
-//         isLiked = false;
-//         likeCount -= 1;
-//         handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
-//         handleUnlikeRequest(current_user_id, post.post_id);
-//       } else {
-//         handleLikeUI(LikeButtonRef, LikeIconRef);
-//         isLiked = true;
-//         likeCount += 1;
-//         handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
-//         handleLikeRequest(current_user_id, post.post_id);
-//       }
-//     });
-//   });
-
-//   return `
-//     <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ""} like-button">
-//       ${LikeIcon(post.post_id, post.is_liked)}
-//       Like
-//     </span>
-//   `;
-// }
 function LikeButton(post, current_user_id) {
   setTimeout(() => {
     const LikeButtonRef = document.getElementById(
       `like-button-${post.post_id}`
     );
-    console.log("🚀 ~ setTimeout ~ LikeButtonRef:", LikeButtonRef)
     const LikeIconRef = document.querySelector(
       `#like-${post.post_id} #primary`
     );
@@ -237,8 +196,7 @@ function LikeButton(post, current_user_id) {
     let isLiked = post.is_liked;
     let likeCount = post.like_count ? parseInt(post.like_count) : 0;
     LikeButtonRef.addEventListener("click", () => {
-      console.log('clicked');
-      console.log(isLiked);
+
       if (isLiked) {
         handleUnlikeUI(LikeButtonRef, LikeIconRef);
         isLiked = false;
@@ -278,8 +236,6 @@ function CommentForm(post, sendicon) {
       const user_id = token.user_id;
       const post_id = post.post_id;
 
-      console.log(user_id);
-
       let response = await fetch("/add-comment", {
         method: "POST",
         headers: {
@@ -314,7 +270,6 @@ function CommentForm(post, sendicon) {
   `;
 }
 function Comment(comment, usericon) {
-  console.log("🚀 ~ Comment ~ comment:", comment)
   return `
       <div style="display: flex; align-items: flex-start; gap: 10px;">
         ${usericon}
@@ -326,7 +281,6 @@ function Comment(comment, usericon) {
   `
 }
 function Comments(comments, usericon) {
-console.log("🚀 ~ Comments ~ comments:", comments)
 
   if(comments !== null && comments !== undefined) {
     const comms = comments.map(comment => `
@@ -340,7 +294,6 @@ console.log("🚀 ~ Comments ~ comments:", comments)
   
 }
 function Post(post, current_user_id) {
-  console.log("🚀 ~ Post ~ post:", post)
   const PostContainer = document.createElement("div");
   PostContainer.id = "c222";
 

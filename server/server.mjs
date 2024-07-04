@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const projectPath = __dirname.substring(0, __dirname.indexOf('/fbclone/') + 8);
+const projectPath = __dirname.substring(0, __dirname.indexOf('/friendify/') + 10);
 
 app.use(express.static(join(projectPath, "client")));
 
