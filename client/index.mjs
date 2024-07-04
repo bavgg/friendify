@@ -368,9 +368,6 @@ function Grid() {
   </div>
   `;
 }
-async function Test() {
-  console.log("test");
-}
 
 function Init() {
   if (!isAuthenticated()) {
