@@ -67,7 +67,7 @@ export async function insert_post(user_id, content) {
     const values = [user_id, content];
 
     const result = await client.query(query, values);
-    // console.log(result.rows[0]);
+    console.log(result.rows[0]);
 
     return result.rows[0]; // Return the inserted user
   } catch (err) {

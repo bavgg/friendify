@@ -24,8 +24,6 @@ const createPostsTableQuery = `
   );
 `;
 
-
-
 const createLikesTableQuery = `
   CREATE TABLE likes (
     id SERIAL PRIMARY KEY,
@@ -35,21 +33,21 @@ const createLikesTableQuery = `
   );
 `;
 const createCommentsTableQuery = `
-  CREATE TABLE comments (
-    comment_id SERIAL PRIMARY KEY,
-    post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    content TEXT NOT NULL
-  );
+ CREATE TABLE comments (
+   comment_id SERIAL PRIMARY KEY,
+   post_id INT NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE,
+   user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+   content TEXT NOT NULL,
+   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+ );
 `;
 
 const executeQuery = (query, callback) => {
   client.query(query, (err, res) => {
     if (err) {
       console.error(`query error`, err.stack);
-      
     } else {
-      console.table( res.rows);
+      console.table(res.rows);
       // client.end();
     }
     // If a callback function is provided, call it
@@ -58,19 +56,18 @@ const executeQuery = (query, callback) => {
     }
   });
 };
-// deleteTable('likes');
-
+// deleteTable('comments');
 
 function query() {
-//   const query = `
-//   SELECT
-//     *
-//   FROM posts
-//   JOIN users ON posts.user_id = users.id
-//   LEFT JOIN likes ON likes.post_id = posts.id
-//   ORDER BY posts.created_at DESC
-// `;
-//   executeQuery(query);
+  //   const query = `
+  //   SELECT
+  //     *
+  //   FROM posts
+  //   JOIN users ON posts.user_id = users.id
+  //   LEFT JOIN likes ON likes.post_id = posts.id
+  //   ORDER BY posts.created_at DESC
+  // `;
+  //   executeQuery(query);
 
   // const query4 = `
   // SELECT
@@ -88,17 +85,15 @@ function query() {
   // executeQuery(query2);
 
   // const query22 = `
-  
+
   // SELECT c.comment_id, c.content, c.user_id, u.firstname, u.lastname, c.post_id, p.content AS post_content
   // FROM comments c
   // JOIN users u ON c.user_id = u.id
   // JOIN posts p ON c.post_id = p.id
   // ORDER BY c.post_id, c.comment_id;
 
-
   // `;
   // executeQuery(query22);
-
 
   // const query3 = `
   // SELECT
@@ -114,7 +109,7 @@ function query() {
   //             WHERE likes.post_id = posts.id AND likes.user_id = 17
   //         ) THEN TRUE
   //         ELSE FALSE
-  //     END AS is_liked 
+  //     END AS is_liked
   //   FROM posts
   //   JOIN users ON posts.user_id = users.id
   //   LEFT JOIN likes ON likes.post_id = posts.id
@@ -123,59 +118,52 @@ function query() {
   // `;
   // executeQuery(query3);
 
-  const query3 = `
-        select
-            u.firstname || ' ' || u.lastname as fullname,
-            p.post_id,
-            p.user_id,
-            p."content",
-            count(distinct l.like_id) as like_count,
-            json_agg (
-                json_build_object (
-                    'comment_id',
-                    c.comment_id,
-                    'comment_content',
-                    c.content,
-                    'comment_user_id',
-                    c.user_id,
-                    'comment_user_name',
-                    CONCAT (cu.firstname, ' ', cu.lastname)
-                )
-            ) filter (
-                where
-                    c.comment_id is not null
-            ) as comments,
-            case
-                when exists (
-                    select
-                        1
-                    from
-                        likes l
-                    where
-                        l.post_id = p.post_id
-                        and l.user_id = 17
-                ) then true
-                else false
-            end as is_liked
-        from
-            posts p
-            left join "comments" c on p.post_id = c.post_id
-            join users u on u.user_id = p.user_id
-            left join users cu on cu.user_id = c.user_id
-            left join likes l on l.post_id = p.post_id
-        group by
-            u.user_id,
-            p.post_id
-        order by
-            p.created_at desc
-  `;
-  executeQuery(query3);
-
+  // const query3 = `
+  //       select
+  //           u.firstname || ' ' || u.lastname as fullname,
+  //           p.post_id,
+  //           p.user_id,
+  //           p."content",
+  //           count(distinct l.like_id) as like_count,
+  //           json_agg (
+  //               json_build_object (
+  //                   'comment_id',
+  //                   c.comment_id,
+  //                   'comment_content',
+  //                   c.content,
+  //                   'comment_user_id',
+  //                   c.user_id,
+  //                   'comment_user_name',
+  //                   CONCAT (cu.firstname, ' ', cu.lastname)
+  //               )
+  //           ) filter (
+  //               where
+  //                   c.comment_id is not null
+  //           ) as comments,
+  //           case
+  //               when exists (
+  //                   select
+  //                       1
+  //                   from
+  //                       likes l
+  //                   where
+  //                       l.post_id = p.post_id
+  //                       and l.user_id = 17
+  //               ) then true
+  //               else false
+  //           end as is_liked
+  //       from
+  //           posts p
+  //           left join "comments" c on p.post_id = c.post_id
+  //           join users u on u.user_id = p.user_id
+  //           left join users cu on cu.user_id = c.user_id
+  //           left join likes l on l.post_id = p.post_id
+  //       group by
+  //           u.user_id,
+  //           p.post_id
+  //       order by
+  //           p.created_at desc
+  // `;
+  executeQuery(createCommentsTableQuery);
 }
 query();
-
-
-
-
-
-

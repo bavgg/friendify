@@ -12,13 +12,14 @@ export async function fetch_posts(user_id) {
                 json_build_object (
                     'comment_id',
                     c.comment_id,
-                    'comment_content',
+                    'content',
                     c.content,
                     'comment_user_id',
                     c.user_id,
-                    'comment_user_name',
+                    'fullname',
                     CONCAT (cu.firstname, ' ', cu.lastname)
                 )
+                order by c.created_at desc  
             ) filter (
                 where
                     c.comment_id is not null

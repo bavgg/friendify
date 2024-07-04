@@ -56,7 +56,7 @@ function ProfileMenu() {
         <div id="c121" tabindex="0" style="display: none;">
           <div id="c121a">
             ${usericon}
-            <p id="fullname1"></p>
+            <p id="fullname1">${token.firstname +  ' ' + token.lastname}</p>
           </div>
           <div id="c121b">
             ${signoutIcon}
@@ -97,12 +97,14 @@ async function handleAddPostRequest(event) {
   });
 
   response = await response.json();
+  console.log("🚀 ~ handleAddPostRequest ~ response:", response)
+  
   let post = {
     ...response.post,
     fullname: token.firstname + " " + token.lastname,
   };
-  post = { ...post, post_id: post.id };
   console.log(post);
+  
   if (response.success) {
     PostsContainer.prepend(Post(post, current_user_id));
   }
@@ -172,6 +174,7 @@ function CommentButton(post, commentIcon) {
       console.log("Clicked", post.post_id);
     });
   }, 0);
+
   return `
         <span id="comment-button-${post.post_id}">
           ${commentIcon}
@@ -179,11 +182,51 @@ function CommentButton(post, commentIcon) {
         </span>
   `;
 }
+// function LikeButton(post, current_user_id) {
+//   document.addEventListener('DOMContentLoaded', () => {
+//     const LikeButtonRef = document.getElementById(`like-button-${post.post_id}`);
+//     console.log("🚀 ~ LikeButton ~ LikeButtonRef:", LikeButtonRef);
+//     // ... rest of your code ...
+//     const LikeIconRef = document.querySelector(
+//       `#like-${post.post_id} #primary`
+//     );
+//     const LikeCountContainer = document.getElementById(
+//       `like-count-${post.post_id}`
+//     );
+
+//     let isLiked = post.is_liked;
+//     let likeCount = post.like_count ? parseInt(post.like_count) : 0;
+//     LikeButtonRef.addEventListener("click", () => {
+//       console.log(isLiked);
+//       if (isLiked) {
+//         handleUnlikeUI(LikeButtonRef, LikeIconRef);
+//         isLiked = false;
+//         likeCount -= 1;
+//         handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
+//         handleUnlikeRequest(current_user_id, post.post_id);
+//       } else {
+//         handleLikeUI(LikeButtonRef, LikeIconRef);
+//         isLiked = true;
+//         likeCount += 1;
+//         handleLikeCountUI(LikeCountContainer, likeCount, likeicon_small);
+//         handleLikeRequest(current_user_id, post.post_id);
+//       }
+//     });
+//   });
+
+//   return `
+//     <span id="like-button-${post.post_id}" class="${post.is_liked ? `liked` : ""} like-button">
+//       ${LikeIcon(post.post_id, post.is_liked)}
+//       Like
+//     </span>
+//   `;
+// }
 function LikeButton(post, current_user_id) {
   setTimeout(() => {
     const LikeButtonRef = document.getElementById(
       `like-button-${post.post_id}`
     );
+    console.log("🚀 ~ setTimeout ~ LikeButtonRef:", LikeButtonRef)
     const LikeIconRef = document.querySelector(
       `#like-${post.post_id} #primary`
     );
@@ -194,6 +237,7 @@ function LikeButton(post, current_user_id) {
     let isLiked = post.is_liked;
     let likeCount = post.like_count ? parseInt(post.like_count) : 0;
     LikeButtonRef.addEventListener("click", () => {
+      console.log('clicked');
       console.log(isLiked);
       if (isLiked) {
         handleUnlikeUI(LikeButtonRef, LikeIconRef);
@@ -210,6 +254,7 @@ function LikeButton(post, current_user_id) {
       }
     });
   }, 0);
+
   return `
           <span id="like-button-${post.post_id}" class="${
     post.is_liked ? `liked` : ""
@@ -247,14 +292,9 @@ function CommentForm(post, sendicon) {
 
       const div = document.createElement('div');
       div.innerHTML = `
-        ${usericon}
-        <div class="flexcol">
-          <p id="${response.comment_id}">${response.fullname}</p>
-          <p>${response.content}</p>
-        </div>
+        ${Comment(response, usericon)}
       `
-      CommentsRef.appendChild(div)
-
+      CommentsRef.prepend(div)
     });
   }, 0);
 
@@ -264,6 +304,7 @@ function CommentForm(post, sendicon) {
             style="background-color: #d6f1f5"
             type="text"
             placeholder="Write a comment..."
+            required
           />
           <button id="comment-send-button">
             ${sendicon}
@@ -272,20 +313,24 @@ function CommentForm(post, sendicon) {
         </form>
   `;
 }
-
-function Comments(comments, usericon) {
-  console.log(comments);
-  if(comments !== null) {
-    const comms = comments.map(comment => `
-      <div>
+function Comment(comment, usericon) {
+  console.log("🚀 ~ Comment ~ comment:", comment)
+  return `
+      <div style="display: flex; align-items: flex-start; gap: 10px;">
         ${usericon}
         <div class="flexcol">
-          <p id="${comment.comment_id}">${comment.comment_user_name}</p>
-          <p>${comment.comment_content}</p>
+          <p id="${comment.comment_id}">${comment.fullname}</p>
+          <p>${comment.content}</p>
         </div>
       </div>
-      
-      
+  `
+}
+function Comments(comments, usericon) {
+console.log("🚀 ~ Comments ~ comments:", comments)
+
+  if(comments !== null && comments !== undefined) {
+    const comms = comments.map(comment => `
+      ${Comment(comment, usericon)}
     `).join('');
   
     return comms;
@@ -295,6 +340,7 @@ function Comments(comments, usericon) {
   
 }
 function Post(post, current_user_id) {
+  console.log("🚀 ~ Post ~ post:", post)
   const PostContainer = document.createElement("div");
   PostContainer.id = "c222";
 
@@ -318,11 +364,11 @@ function Post(post, current_user_id) {
       </div>
       <hr />
       <div id="c222b">
-        <div id="comments-${post.post_id}" class="flexcol">
+        <div id="comments-${post.post_id}" class="flexcol2">
           ${Comments(post.comments, usericon)}
           <!-- comments -->
         </div>
-        <div class="flexrow">
+        <div class="flexrow flexrow1">
           ${usericon}
           ${CommentForm(post, sendicon)}
         </div>
@@ -357,7 +403,7 @@ function Grid() {
     <div id="c21">
       <div id="c211">
         ${usericon}
-        <p id="fullname2"></p>
+        <p id="fullname2">${token.firstname + ' ' + token.lastname}</p>
       </div>
     </div>
     <div id="c22">

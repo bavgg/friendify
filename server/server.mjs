@@ -66,7 +66,7 @@ app.post('/add-post', async (req, res) => {
 
   const result = await insert_post(user_id, content);
   
-  if (result.id !== undefined) {
+  if (result) {
     return res.status(201).json({ success: true, post: result });
   } else {
     return res.status(401).json({ success: false });
